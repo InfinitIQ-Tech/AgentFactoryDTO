@@ -2,7 +2,7 @@
 // https://docs.swift.org/swift-book
 import Vapor
 
-enum JSONValue: Codable, Equatable, Sendable {
+public enum JSONValue: Codable, Equatable, Sendable {
     case string(String)
     case number(Double)
     case bool(Bool)
@@ -10,7 +10,7 @@ enum JSONValue: Codable, Equatable, Sendable {
     case array([JSONValue])
     case null
 
-    init(from decoder: any Decoder) throws {
+    public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
 
         if container.decodeNil() {
@@ -57,7 +57,7 @@ enum JSONValue: Codable, Equatable, Sendable {
         )
     }
 
-    func encode(to encoder: any Encoder) throws {
+    public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
         case .string(let s):
@@ -76,266 +76,266 @@ enum JSONValue: Codable, Equatable, Sendable {
     }
 }
 
-enum EnvironmentName: String, Content, Sendable {
+public enum EnvironmentName: String, Content, Sendable {
     case dev
     case staging
     case prod
 }
 
-enum AgentVersionStatus: String, Content, Sendable {
+public enum AgentVersionStatus: String, Content, Sendable {
     case draft
     case published
     case deprecated
 }
 
-enum ChatRole: String, Content, Sendable {
+public enum ChatRole: String, Content, Sendable {
     case system
     case user
     case assistant
     case tool
 }
 
-enum ClientChatRole: String, Content, Sendable {
+public enum ClientChatRole: String, Content, Sendable {
     case user
     case assistant
 }
 
-enum FeedbackRating: String, Content, Sendable {
+public enum FeedbackRating: String, Content, Sendable {
     case thumbsUp = "thumbs_up"
     case thumbsDown = "thumbs_down"
 }
 
 // MARK: Agents
-struct AgentRuntimeConfig: Content, Sendable {
-    var streaming: Bool
-    var maxTurns: Int?
-    var maxConcurrentTools: Int?
+public struct AgentRuntimeConfig: Content, Sendable {
+    public let streaming: Bool
+    public let maxTurns: Int?
+    public let maxConcurrentTools: Int?
 }
 
-struct AgentModelCandidate: Content, Sendable {
-    var name: String
-    var model: String
+public struct AgentModelCandidate: Content, Sendable {
+    public let name: String
+    public let model: String
 }
 
-struct AgentModelConfig: Content, Sendable {
-    var strategy: String
-    var candidates: [AgentModelCandidate]
-    var routingPolicy: [String: JSONValue]?
+public struct AgentModelConfig: Content, Sendable {
+    public let strategy: String
+    public let candidates: [AgentModelCandidate]
+    public let routingPolicy: [String: JSONValue]?
 }
 
-struct AgentMemoryConfig: Content, Sendable {
-    var type: String?
-    var windowTurns: Int?
+public struct AgentMemoryConfig: Content, Sendable {
+    public let type: String?
+    public let windowTurns: Int?
 }
 
-struct AgentRetrievalConfig: Content, Sendable {
-    var enabled: Bool
-    var corpusIds: [String]?
-    var topK: Int?
-    var rerank: Bool?
-    var filters: [String: JSONValue]?
+public struct AgentRetrievalConfig: Content, Sendable {
+    public let enabled: Bool
+    public let corpusIds: [String]?
+    public let topK: Int?
+    public let rerank: Bool?
+    public let filters: [String: JSONValue]?
 }
 
-struct AgentToolPolicy: Content, Sendable {
-    var requireUserConfirmation: [String]?
-    var maxTotalRuntimeMs: Int?
-    var maxToolsPerTurn: Int?
+public struct AgentToolPolicy: Content, Sendable {
+    public let requireUserConfirmation: [String]?
+    public let maxTotalRuntimeMs: Int?
+    public let maxToolsPerTurn: Int?
 }
 
-struct AgentToolsConfig: Content, Sendable {
-    var allowed: [String]?
-    var toolPolicy: AgentToolPolicy?
+public struct AgentToolsConfig: Content, Sendable {
+    public let allowed: [String]?
+    public let toolPolicy: AgentToolPolicy?
 }
 
-struct AgentGuardrailsConfig: Content, Sendable {
-    var piiRedaction: Bool?
-    var jailbreakDetection: Bool?
-    var blockedTopics: [String]?
+public struct AgentGuardrailsConfig: Content, Sendable {
+    public let piiRedaction: Bool?
+    public let jailbreakDetection: Bool?
+    public let blockedTopics: [String]?
 }
 
-struct AgentConfig: Content, Sendable {
-    var id: String
-    var name: String
-    var version: String
-    var schemaVersion: String
-    var description: String?
-    var tags: [String]?
+public struct AgentConfig: Content, Sendable {
+    public let id: String
+    public let name: String
+    public let version: String
+    public let schemaVersion: String
+    public let description: String?
+    public let tags: [String]?
 
-    var runtime: AgentRuntimeConfig
-    var model: AgentModelConfig
-    var memory: AgentMemoryConfig?
-    var retrieval: AgentRetrievalConfig?
-    var tools: AgentToolsConfig?
-    var guardrails: AgentGuardrailsConfig?
+    public let runtime: AgentRuntimeConfig
+    public let model: AgentModelConfig
+    public let memory: AgentMemoryConfig?
+    public let retrieval: AgentRetrievalConfig?
+    public let tools: AgentToolsConfig?
+    public let guardrails: AgentGuardrailsConfig?
 }
 
 // MARK: - Control plane: Requests
 
-struct CreateAgentRequest: Content, Sendable {
-    var slug: String
-    var name: String
-    var systemPrompt: String
-    var description: String?
-    var templateId: String?
-    var tags: [String]?
+public struct CreateAgentRequest: Content, Sendable {
+    public let slug: String
+    public let name: String
+    public let systemPrompt: String
+    public let description: String?
+    public let templateId: String?
+    public let tags: [String]?
 }
 
-struct UpdateAgentRequest: Content, Sendable {
-    var name: String?
-    var systemPrompt: String?
-    var description: String?
-    var tags: [String]?
+public struct UpdateAgentRequest: Content, Sendable {
+    public let name: String?
+    public let systemPrompt: String?
+    public let description: String?
+    public let tags: [String]?
 }
 
-struct PublishAgentVersionRequest: Content, Sendable {
-    var config: AgentConfig
-    var tags: [String]?
+public struct PublishAgentVersionRequest: Content, Sendable {
+    public let config: AgentConfig
+    public let tags: [String]?
 }
 
-struct DeploymentVersionWeight: Content, Sendable {
-    var agentVersionId: UUID
-    var rolloutWeight: Int
+public struct DeploymentVersionWeight: Content, Sendable {
+    public let agentVersionId: UUID
+    public let rolloutWeight: Int
 }
 
-struct UpsertDeploymentRequest: Content, Sendable {
-    var agentRef: String
-    var environment: EnvironmentName
-    var versions: [DeploymentVersionWeight]
+public struct UpsertDeploymentRequest: Content, Sendable {
+    public let agentRef: String
+    public let environment: EnvironmentName
+    public let versions: [DeploymentVersionWeight]
 }
 
 // MARK: - Runtime: Requests
 
-struct ToolCall: Content, Sendable {
-    var toolId: String
-    var args: [String: JSONValue]
+public struct ToolCall: Content, Sendable {
+    public let toolId: String
+    public let args: [String: JSONValue]
 }
 
-struct ChatMessageIn: Content, Sendable {
-    var role: ClientChatRole
-    var content: String
+public struct ChatMessageIn: Content, Sendable {
+    public let role: ClientChatRole
+    public let content: String
 }
 
-struct ChatRequest: Content, Sendable {
-    var agentRef: String
-    var environment: EnvironmentName
-    var conversationId: UUID?
-    var userId: String?
-    var messages: [ChatMessageIn]
-    var metadata: [String: JSONValue]?
+public struct ChatRequest: Content, Sendable {
+    public let agentRef: String
+    public let environment: EnvironmentName
+    public let conversationId: UUID?
+    public let userId: String?
+    public let messages: [ChatMessageIn]
+    public let metadata: [String: JSONValue]?
     // Optional: provider API keys to pass to runtime sidecar. Not persisted.
-    var providerKeys: [String: String]?
+    public let providerKeys: [String: String]?
 }
 
-struct FeedbackRequest: Content, Sendable {
-    var agentRef: String
-    var agentVersionId: UUID
-    var environment: EnvironmentName
-    var conversationId: UUID?
-    var messageId: UUID?
-    var userId: String?
-    var rating: FeedbackRating
-    var reason: String?
-    var metadata: [String: JSONValue]?
+public struct FeedbackRequest: Content, Sendable {
+    public let agentRef: String
+    public let agentVersionId: UUID
+    public let environment: EnvironmentName
+    public let conversationId: UUID?
+    public let messageId: UUID?
+    public let userId: String?
+    public let rating: FeedbackRating
+    public let reason: String?
+    public let metadata: [String: JSONValue]?
 }
 
 // MARK: - Responses
 
-struct AgentDTO: Content, Sendable {
-    var id: UUID
-    var orgId: String
-    var projectId: String
-    var slug: String
-    var name: String
-    var systemPrompt: String
-    var description: String?
-    var tags: [String]?
-    var createdBy: String?
-    var createdAt: Date
-    var updatedAt: Date?
-    var archivedAt: Date?
+public struct AgentDTO: Content, Sendable {
+    public let id: UUID
+    public let orgId: String
+    public let projectId: String
+    public let slug: String
+    public let name: String
+    public let systemPrompt: String
+    public let description: String?
+    public let tags: [String]?
+    public let createdBy: String?
+    public let createdAt: Date
+    public let updatedAt: Date?
+    public let archivedAt: Date?
 }
 
-struct AgentVersionSummaryDTO: Content, Sendable {
-    var id: UUID
-    var version: String
-    var status: AgentVersionStatus
-    var createdAt: Date
+public struct AgentVersionSummaryDTO: Content, Sendable {
+    public let id: UUID
+    public let version: String
+    public let status: AgentVersionStatus
+    public let createdAt: Date
 }
 
-struct AgentVersionDTO: Content, Sendable {
-    var id: UUID
-    var agentId: UUID
-    var version: String
-    var schemaVersion: String
-    var status: AgentVersionStatus
-    var config: AgentConfig
-    var tags: [String]?
-    var createdBy: String?
-    var createdAt: Date
+public struct AgentVersionDTO: Content, Sendable {
+    public let id: UUID
+    public let agentId: UUID
+    public let version: String
+    public let schemaVersion: String
+    public let status: AgentVersionStatus
+    public let config: AgentConfig
+    public let tags: [String]?
+    public let createdBy: String?
+    public let createdAt: Date
 }
 
-struct DeploymentDTO: Content, Sendable {
-    var id: UUID
-    var orgId: String
-    var projectId: String
-    var agentId: UUID
-    var environment: EnvironmentName
-    var versions: [DeploymentVersionWeight]
-    var createdBy: String?
-    var createdAt: Date
-    var updatedAt: Date?
+public struct DeploymentDTO: Content, Sendable {
+    public let id: UUID
+    public let orgId: String
+    public let projectId: String
+    public let agentId: UUID
+    public let environment: EnvironmentName
+    public let versions: [DeploymentVersionWeight]
+    public let createdBy: String?
+    public let createdAt: Date
+    public let updatedAt: Date?
 }
 
-struct AgentWithDeploymentsDTO: Content, Sendable {
-    var agent: AgentDTO
-    var latestVersions: [AgentVersionSummaryDTO]?
-    var deployments: [DeploymentDTO]?
+public struct AgentWithDeploymentsDTO: Content, Sendable {
+    public let agent: AgentDTO
+    public let latestVersions: [AgentVersionSummaryDTO]?
+    public let deployments: [DeploymentDTO]?
 }
 
-struct ToolCallSummaryDTO: Content, Sendable {
-    var toolId: String
-    var success: Bool
-    var durationMs: Int?
-    var error: String?
+public struct ToolCallSummaryDTO: Content, Sendable {
+    public let toolId: String
+    public let success: Bool
+    public let durationMs: Int?
+    public let error: String?
 }
 
-struct RetrievalSummaryDTO: Content, Sendable {
-    var corpusIds: [String]?
-    var topK: Int?
-    var hitCount: Int?
+public struct RetrievalSummaryDTO: Content, Sendable {
+    public let corpusIds: [String]?
+    public let topK: Int?
+    public let hitCount: Int?
 }
 
-struct ChatUsageDTO: Content, Sendable {
-    var tokensInput: Int?
-    var tokensOutput: Int?
-    var cost: Double?
+public struct ChatUsageDTO: Content, Sendable {
+    public let tokensInput: Int?
+    public let tokensOutput: Int?
+    public let cost: Double?
 }
 
-struct ChatTelemetryDTO: Content, Sendable {
-    var latencyMs: Int?
-    var toolCalls: [ToolCallSummaryDTO]?
-    var retrieval: RetrievalSummaryDTO?
+public struct ChatTelemetryDTO: Content, Sendable {
+    public let latencyMs: Int?
+    public let toolCalls: [ToolCallSummaryDTO]?
+    public let retrieval: RetrievalSummaryDTO?
 }
 
-struct ChatMessageDTO: Content, Sendable {
-    var id: UUID
-    var role: ChatRole
-    var content: String
-    var createdAt: Date
-    var toolCalls: [ToolCall]?
+public struct ChatMessageDTO: Content, Sendable {
+    public let id: UUID
+    public let role: ChatRole
+    public let content: String
+    public let createdAt: Date
+    public let toolCalls: [ToolCall]?
 }
 
-struct ChatResponseDTO: Content, Sendable {
-    var requestId: UUID
-    var agentId: UUID
-    var agentVersionId: UUID
-    var environment: EnvironmentName
-    var conversationId: UUID
-    var messages: [ChatMessageDTO]
-    var usage: ChatUsageDTO?
-    var telemetry: ChatTelemetryDTO?
+public struct ChatResponseDTO: Content, Sendable {
+    public let requestId: UUID
+    public let agentId: UUID
+    public let agentVersionId: UUID
+    public let environment: EnvironmentName
+    public let conversationId: UUID
+    public let messages: [ChatMessageDTO]
+    public let usage: ChatUsageDTO?
+    public let telemetry: ChatTelemetryDTO?
 }
 
-struct AcceptedResponse: Content, Sendable {
-    var status: String
+public struct AcceptedResponse: Content, Sendable {
+    public let status: String
 }
