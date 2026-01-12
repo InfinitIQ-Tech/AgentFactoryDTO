@@ -338,4 +338,8 @@ public struct ChatResponseDTO: Content, Sendable {
 
 public struct AcceptedResponse: Content, Sendable {
     public let status: String
+
+    public init(status: String) {
+        self.status = status
+    }
 }
