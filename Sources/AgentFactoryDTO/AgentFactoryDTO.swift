@@ -319,17 +319,47 @@ public struct ChatMessageIn: Content, Sendable {
     }
 }
 
+/// Request payload for the chat endpoint.
 public struct ChatRequest: Content, Sendable {
+    /// Agent identifier - can be either a slug (string) or UUID
     public let agentRef: String
+    /// Target environment for deployment routing (dev, staging, prod)
     public let environment: EnvironmentName
+    /// Optional conversation ID for maintaining chat history
     public let conversationId: UUID?
+    /// Optional user identifier for consistent weighted routing
     public let userId: String?
+    /// Chat messages to send (last message must be from user)
     public let messages: [ChatMessageIn]
+    /// Optional metadata to pass through to the runtime
     public let metadata: [String: JSONValue]?
-    // Optional: provider API keys to pass to runtime sidecar. Not persisted.
+    /// Optional provider API keys (e.g., OpenAI). Not persisted.
     public let providerKeys: [String: String]?
+    /// Optional version ID to bypass deployment routing and target a specific version directly.
+    /// When nil, normal deployment routing is used (environment + rollout weights).
+    /// When set, the specified version is used regardless of deployment configuration.
+    public let agentVersionId: UUID?
 
-    public init(agentRef: String, environment: EnvironmentName, conversationId: UUID?, userId: String?, messages: [ChatMessageIn], metadata: [String : JSONValue]?, providerKeys: [String : String]?) {
+    /// Creates a new chat request.
+    /// - Parameters:
+    ///   - agentRef: Agent slug or UUID
+    ///   - environment: Target environment (used for deployment routing when agentVersionId is nil)
+    ///   - conversationId: Optional conversation ID for chat continuity
+    ///   - userId: Optional user ID for consistent weighted version selection
+    ///   - messages: Array of chat messages (last must be user role)
+    ///   - metadata: Optional metadata dictionary
+    ///   - providerKeys: Optional provider API keys (not persisted)
+    ///   - agentVersionId: Optional version ID to bypass deployment routing. Defaults to nil.
+    public init(
+        agentRef: String,
+        environment: EnvironmentName,
+        conversationId: UUID?,
+        userId: String?,
+        messages: [ChatMessageIn],
+        metadata: [String: JSONValue]?,
+        providerKeys: [String: String]?,
+        agentVersionId: UUID? = nil
+    ) {
         self.agentRef = agentRef
         self.environment = environment
         self.conversationId = conversationId
@@ -337,6 +367,7 @@ public struct ChatRequest: Content, Sendable {
         self.messages = messages
         self.metadata = metadata
         self.providerKeys = providerKeys
+        self.agentVersionId = agentVersionId
     }
 }
 
