@@ -166,28 +166,6 @@ public struct AgentRetrievalConfig: Content, Sendable {
     }
 }
 
-public struct AgentToolPolicy: Content, Sendable {
-    public let requireUserConfirmation: [String]?
-    public let maxTotalRuntimeMs: Int?
-    public let maxToolsPerTurn: Int?
-
-    public init(requireUserConfirmation: [String]?, maxTotalRuntimeMs: Int?, maxToolsPerTurn: Int?) {
-        self.requireUserConfirmation = requireUserConfirmation
-        self.maxTotalRuntimeMs = maxTotalRuntimeMs
-        self.maxToolsPerTurn = maxToolsPerTurn
-    }
-}
-
-public struct AgentToolsConfig: Content, Sendable {
-    public let allowed: [String]?
-    public let toolPolicy: AgentToolPolicy?
-
-    public init(allowed: [String]?, toolPolicy: AgentToolPolicy?) {
-        self.allowed = allowed
-        self.toolPolicy = toolPolicy
-    }
-}
-
 public struct AgentGuardrailsConfig: Content, Sendable {
     public let piiRedaction: Bool?
     public let jailbreakDetection: Bool?
