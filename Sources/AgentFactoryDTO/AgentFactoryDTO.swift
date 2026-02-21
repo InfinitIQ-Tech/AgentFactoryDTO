@@ -278,10 +278,12 @@ public struct UpsertDeploymentRequest: Content, Sendable {
 // MARK: - Runtime: Requests
 
 public struct ToolCall: Content, Sendable {
+    public let callId: String?
     public let toolId: String
     public let args: [String: JSONValue]
 
-    public init(toolId: String, args: [String : JSONValue]) {
+    public init(callId: String? = nil, toolId: String, args: [String : JSONValue]) {
+        self.callId = callId
         self.toolId = toolId
         self.args = args
     }
@@ -521,11 +523,13 @@ public struct ChatTelemetryDTO: Content, Sendable {
     public let latencyMs: Int?
     public let toolCalls: [ToolCallSummaryDTO]?
     public let retrieval: RetrievalSummaryDTO?
+    public let ttftMs: Int?
 
-    public init(latencyMs: Int?, toolCalls: [ToolCallSummaryDTO]?, retrieval: RetrievalSummaryDTO?) {
+    public init(latencyMs: Int?, toolCalls: [ToolCallSummaryDTO]?, retrieval: RetrievalSummaryDTO?, ttftMs: Int? = nil) {
         self.latencyMs = latencyMs
         self.toolCalls = toolCalls
         self.retrieval = retrieval
+        self.ttftMs = ttftMs
     }
 }
 
@@ -554,8 +558,9 @@ public struct ChatResponseDTO: Content, Sendable {
     public let messages: [ChatMessageDTO]
     public let usage: ChatUsageDTO?
     public let telemetry: ChatTelemetryDTO?
+    public let error: [String: String]?
 
-    public init(requestId: UUID, agentId: UUID, agentVersionId: UUID, environment: EnvironmentName, conversationId: UUID, messages: [ChatMessageDTO], usage: ChatUsageDTO?, telemetry: ChatTelemetryDTO?) {
+    public init(requestId: UUID, agentId: UUID, agentVersionId: UUID, environment: EnvironmentName, conversationId: UUID, messages: [ChatMessageDTO], usage: ChatUsageDTO?, telemetry: ChatTelemetryDTO?, error: [String: String]? = nil) {
         self.requestId = requestId
         self.agentId = agentId
         self.agentVersionId = agentVersionId
@@ -564,6 +569,7 @@ public struct ChatResponseDTO: Content, Sendable {
         self.messages = messages
         self.usage = usage
         self.telemetry = telemetry
+        self.error = error
     }
 }
 

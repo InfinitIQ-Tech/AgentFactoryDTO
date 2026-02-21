@@ -7,17 +7,17 @@ import Vapor
 
 /// SSE event payload for a `tool_result` event emitted by the streaming sidecar.
 ///
-/// Wire format: `{"tool":"func_name","result":"...","success":true,"id":"call_123"}`
+/// Wire format: `{"tool_id":"func_name","call_id":"call_123","output":"...","success":true}`
 public struct ToolResultEventDTO: Content, Sendable {
-    public let id: String
-    public let tool: String
-    public let result: String
+    public let toolId: String
+    public let callId: String?
+    public let output: String
     public let success: Bool
 
-    public init(id: String, tool: String, result: String, success: Bool) {
-        self.id = id
-        self.tool = tool
-        self.result = result
+    public init(toolId: String, callId: String?, output: String, success: Bool) {
+        self.toolId = toolId
+        self.callId = callId
+        self.output = output
         self.success = success
     }
 }
