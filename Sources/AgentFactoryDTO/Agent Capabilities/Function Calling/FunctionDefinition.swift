@@ -38,6 +38,14 @@ public struct ToolDefinition: Content, Sendable, Equatable {
     }
 }
 
+public struct AddToolToAgentVersionRequest: Content, Sendable, Equatable {
+    public let definition: ToolDefinition
+
+    public init(definition: ToolDefinition) {
+        self.definition = definition
+    }
+}
+
 @available(*, deprecated, renamed: "ToolDefinition")
 public typealias FunctionDefinition = ToolDefinition
 
