@@ -7,15 +7,34 @@
 
 import Vapor
 
+public struct ToolEndpoint: Content, Sendable, Equatable {
+    public let url: String
+    public let method: String?
+    public let headers: [String: String]?
+
+    public init(url: String, method: String? = nil, headers: [String: String]? = nil) {
+        self.url = url
+        self.method = method
+        self.headers = headers
+    }
+}
+
 public struct ToolDefinition: Content, Sendable, Equatable {
     public let name: String
     public let description: String
     public let parameters: [String: JSONValue]
+    public let endpoint: ToolEndpoint?
 
-    public init(name: String, description: String, parameters: [String: JSONValue]) {
+    public init(
+        name: String,
+        description: String,
+        parameters: [String: JSONValue],
+        endpoint: ToolEndpoint? = nil
+    ) {
         self.name = name
         self.description = description
         self.parameters = parameters
+        self.endpoint = endpoint
     }
 }
 
