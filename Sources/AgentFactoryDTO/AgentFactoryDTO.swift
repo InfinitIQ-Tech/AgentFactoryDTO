@@ -183,6 +183,7 @@ public struct AgentConfig: Content, Sendable {
     public let name: String
     public let version: String
     public let schemaVersion: String
+    public let systemPrompt: String
     public let description: String?
     public let tags: [String]?
 
@@ -193,11 +194,12 @@ public struct AgentConfig: Content, Sendable {
     public let tools: AgentToolsConfig?
     public let guardrails: AgentGuardrailsConfig?
 
-    public init(id: String, name: String, version: String, schemaVersion: String, description: String?, tags: [String]?, runtime: AgentRuntimeConfig, model: AgentModelConfig, memory: AgentMemoryConfig?, retrieval: AgentRetrievalConfig?, tools: AgentToolsConfig?, guardrails: AgentGuardrailsConfig?) {
+    public init(id: String, name: String, version: String, schemaVersion: String, systemPrompt: String, description: String?, tags: [String]?, runtime: AgentRuntimeConfig, model: AgentModelConfig, memory: AgentMemoryConfig?, retrieval: AgentRetrievalConfig?, tools: AgentToolsConfig?, guardrails: AgentGuardrailsConfig?) {
         self.id = id
         self.name = name
         self.version = version
         self.schemaVersion = schemaVersion
+        self.systemPrompt = systemPrompt
         self.description = description
         self.tags = tags
         self.runtime = runtime

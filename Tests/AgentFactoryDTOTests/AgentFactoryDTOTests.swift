@@ -104,4 +104,88 @@ final class AgentFactoryDTOTests: XCTestCase {
         XCTAssertEqual(evt.output, "ok")
         XCTAssertEqual(evt.success, true)
     }
+
+    func testAgentConfigEncodesVersionScopedSystemPrompt() throws {
+        let config = AgentConfig(
+            id: "support-agent",
+            name: "Support Agent",
+            version: "v1",
+            schemaVersion: "2026-03",
+            systemPrompt: "Use the published support instructions.",
+            description: "Published config",
+            tags: ["ga"],
+            runtime: AgentRuntimeConfig(streaming: true, maxTurns: 8, maxConcurrentTools: 1),
+            model: AgentModelConfig(
+                strategy: "single",
+                candidates: [AgentModelCandidate(name: "primary", model: "openai:gpt-4o")],
+                routingPolicy: nil
+            ),
+            memory: nil,
+            retrieval: nil,
+            tools: nil,
+            guardrails: nil
+        )
+
+        let data = try encoder.encode(config)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        XCTAssertEqual(json["system_prompt"] as? String, "Use the published support instructions.")
+        XCTAssertNil(json["systemPrompt"])
+    }
+
+    func testPublishAgentVersionRequestEncodesNestedSystemPrompt() throws {
+        let request = PublishAgentVersionRequest(
+            config: AgentConfig(
+                id: "support-agent",
+                name: "Support Agent",
+                version: "v2",
+                schemaVersion: "2026-03",
+                systemPrompt: "Use the published v2 instructions.",
+                description: nil,
+                tags: nil,
+                runtime: AgentRuntimeConfig(streaming: true, maxTurns: nil, maxConcurrentTools: nil),
+                model: AgentModelConfig(
+                    strategy: "single",
+                    candidates: [AgentModelCandidate(name: "primary", model: "openai:gpt-4o")],
+                    routingPolicy: nil
+                ),
+                memory: nil,
+                retrieval: nil,
+                tools: nil,
+                guardrails: nil
+            ),
+            tags: ["ga"]
+        )
+
+        let data = try encoder.encode(request)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let config = try XCTUnwrap(json["config"] as? [String: Any])
+
+        XCTAssertEqual(config["system_prompt"] as? String, "Use the published v2 instructions.")
+    }
+
+    func testAgentConfigDecodeFailsWhenSystemPromptIsMissing() throws {
+        let json = #"""
+        {
+          "id": "support-agent",
+          "name": "Support Agent",
+          "version": "v1",
+          "schema_version": "2026-03",
+          "runtime": {
+            "streaming": true
+          },
+          "model": {
+            "strategy": "single",
+            "candidates": [
+              {
+                "name": "primary",
+                "model": "openai:gpt-4o"
+              }
+            ]
+          }
+        }
+        """#
+
+        XCTAssertThrowsError(try decoder.decode(AgentConfig.self, from: Data(json.utf8)))
+    }
 }
