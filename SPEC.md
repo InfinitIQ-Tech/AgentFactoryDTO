@@ -130,6 +130,9 @@ The source tree contains spaces in `Agent Capabilities/Function Calling`. Quote 
 | `JSONValue` | Integer payloads normalize to `.number(Double)` |
 | `AgentToolsConfig` | Must decode either `definitions` or legacy `functions` input |
 | `AgentToolsConfig` | Must encode only `definitions`, never `functions` |
+| `AgentToolsConfig.allowed` | `nil` and `[]` are distinct wire states and must round-trip distinctly |
+| `AgentToolsConfig` | A payload with `definitions` and omitted `allowed` is a valid definitions-only shape; the DTO preserves omission instead of synthesizing tool names |
+| `AgentToolsConfig` | Omitted tool config or an omitted allow-list does not, by itself, imply any enabled built-in tools |
 | `FunctionDefinition` | Deprecated typealias to `ToolDefinition`; do not remove without an intentional breaking-change decision |
 
 ### 6.3 Semantic Contracts Documented in Code
@@ -140,6 +143,10 @@ The source tree contains spaces in `Agent Capabilities/Function Calling`. Quote 
 - `ChatRequest.messages` are documented to end with a user message; the package currently documents this contract but does not enforce it locally.
 - `AgentConfig.systemPrompt` is a required field on the published version snapshot and encodes to `system_prompt` in JSON.
 - `AgentConfig.systemPrompt` is version-scoped runtime configuration; it is distinct from the mutable `AgentDTO.systemPrompt` control-plane field.
+- `AgentConfig.tools == nil` means the published version snapshot does not declare any tool configuration.
+- `AgentToolsConfig.allowed == nil` preserves allow-list omission from the wire payload, while `AgentToolsConfig.allowed == []` is an explicit empty allow-list.
+- A definitions-only `AgentToolsConfig` payload (`definitions` present with omitted `allowed`) is valid; downstream runtimes may infer executable tool names from the definitions and publishers may normalize that payload before persistence.
+- `AgentToolsConfig` does not imply built-in tools are enabled unless the payload names them explicitly.
 - `ChatMessageIn` accepts only `user` or `assistant`.
 - `ChatMessageDTO` can emit `system`, `user`, `assistant`, or `tool`.
 
@@ -255,6 +262,7 @@ Expectations for new or changed code:
 | `toolId` | Stable string identifier for a tool or tool schema |
 | `callId` | Optional correlation ID that pairs a tool call with its eventual result |
 | `systemPrompt` | Version-scoped instruction string carried inside `AgentConfig` and serialized as `system_prompt` |
+| `allowed` | Optional exact tool-name allow-list in `AgentToolsConfig`; `nil` preserves omission and `[]` is an explicit empty whitelist |
 | `definitions` | Preferred key for LLM-native tool schemas in `AgentToolsConfig` |
 | `functions` | Legacy decode-only key accepted for backward compatibility in `AgentToolsConfig` |
 | SSE | Server-sent events payloads represented by the `Stream*EventDTO`, `ToolCallEventDTO`, and `ToolResultEventDTO` types |

@@ -1,5 +1,12 @@
 # spec_log.md
 
+## 2026-03-16
+
+- Files changed: [`Sources/AgentFactoryDTO/Agent Capabilities/Function Calling/FunctionDefinition.swift`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Sources/AgentFactoryDTO/Agent%20Capabilities/Function%20Calling/FunctionDefinition.swift), [`Tests/AgentFactoryDTOTests/AgentFactoryDTOTests.swift`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Tests/AgentFactoryDTOTests/AgentFactoryDTOTests.swift), [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md), [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md), [`spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_log.md)
+- Summary: Codified `AgentToolsConfig` allow-list semantics in source comments and root specs, and added regression tests for definitions-only payloads plus explicit empty allow-lists.
+- Trigger: `AF-38` contract work to make tool-allow semantics explicit and remove any implication of always-on built-in tools.
+- Operational impact: Future agent work must preserve the distinction between omitted and empty `allowed` values, keep definitions-only payloads stable on the wire, and avoid documenting implicit built-in tool enablement.
+
 ## 2026-03-14
 
 - Files changed: [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md), [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md), [`spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_log.md)

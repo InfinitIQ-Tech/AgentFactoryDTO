@@ -74,6 +74,96 @@ final class AgentFactoryDTOTests: XCTestCase {
         XCTAssertNil(obj?["functions"])
     }
 
+    func testAgentToolsConfigDecodesDefinitionsOnlyPayloadWithoutSynthesizingAllowed() throws {
+        let json = #"""
+        {
+          "definitions": [
+            {
+              "name": "search",
+              "description": "Search the web",
+              "parameters": { "type": "object" },
+              "endpoint": {
+                "url": "https://example.com/tools/search",
+                "method": "POST"
+              }
+            }
+          ],
+          "tool_policy": {
+            "require_user_confirmation": ["search"],
+            "max_total_runtime_ms": 2000
+          }
+        }
+        """#
+
+        let cfg = try decoder.decode(AgentToolsConfig.self, from: Data(json.utf8))
+
+        XCTAssertNil(cfg.allowed)
+        XCTAssertEqual(cfg.definitions?.count, 1)
+        XCTAssertEqual(cfg.definitions?.first?.name, "search")
+        XCTAssertEqual(cfg.definitions?.first?.endpoint?.url, "https://example.com/tools/search")
+        XCTAssertEqual(cfg.toolPolicy?.requireUserConfirmation ?? [], ["search"])
+        XCTAssertEqual(cfg.toolPolicy?.maxTotalRuntimeMs, 2000)
+    }
+
+    func testAgentToolsConfigDefinitionsOnlyEncodingOmitsAllowed() throws {
+        let cfg = AgentToolsConfig(
+            definitions: [
+                ToolDefinition(
+                    name: "search",
+                    description: "Search the web",
+                    parameters: ["type": .string("object")],
+                    endpoint: ToolEndpoint(
+                        url: "https://example.com/tools/search",
+                        method: "POST",
+                        headers: ["Authorization": "Bearer secret"]
+                    )
+                )
+            ],
+            toolPolicy: AgentToolPolicy(
+                requireUserConfirmation: ["search"],
+                maxTotalRuntimeMs: 2000,
+                maxToolsPerTurn: 1
+            )
+        )
+
+        let data = try encoder.encode(cfg)
+        let obj = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let definitions = try XCTUnwrap(obj["definitions"] as? [[String: Any]])
+        let endpoint = try XCTUnwrap(definitions.first?["endpoint"] as? [String: Any])
+        let toolPolicy = try XCTUnwrap(obj["tool_policy"] as? [String: Any])
+
+        XCTAssertNil(obj["allowed"])
+        XCTAssertEqual(endpoint["url"] as? String, "https://example.com/tools/search")
+        XCTAssertEqual(endpoint["method"] as? String, "POST")
+        XCTAssertEqual((endpoint["headers"] as? [String: String])?["Authorization"], "Bearer secret")
+        XCTAssertEqual(toolPolicy["max_total_runtime_ms"] as? Int, 2000)
+        XCTAssertEqual(toolPolicy["max_tools_per_turn"] as? Int, 1)
+    }
+
+    func testAgentToolsConfigPreservesExplicitEmptyAllowedList() throws {
+        let json = #"""
+        {
+          "allowed": [],
+          "definitions": [
+            {
+              "name": "search",
+              "description": "Search the web",
+              "parameters": { "type": "object" }
+            }
+          ]
+        }
+        """#
+
+        let decoded = try decoder.decode(AgentToolsConfig.self, from: Data(json.utf8))
+        XCTAssertEqual(decoded.allowed, [])
+
+        let data = try encoder.encode(decoded)
+        let obj = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        XCTAssertEqual(obj["allowed"] as? [String], [])
+        XCTAssertNotNil(obj["definitions"])
+    }
+
     func testToolCallDecodesCallId() throws {
         let json = #"""
         { "tool_id": "search", "call_id": "call_123", "args": { "query": "hi" } }

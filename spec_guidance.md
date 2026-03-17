@@ -35,6 +35,7 @@ If the code and spec disagree, inspect the live code first and then update the s
 - Use real type names, filenames, and commands from the package.
 - For this library, prefer sections that map to package structure, public API surface, serialization rules, commands, testing, boundaries, and conformance criteria.
 - When a rule affects a compatibility-sensitive DTO such as `JSONValue` or `AgentToolsConfig`, verify the statement against the live implementation and tests before saving the spec.
+- When updating `AgentToolsConfig`, document whether `allowed` is omitted or explicitly empty, whether definitions-only payloads are preserved, and avoid language that implies hidden built-in tools are enabled by default.
 - When `AgentConfig` changes, state whether the field is required, how it serializes on the wire, and whether it represents published runtime snapshot data or separate control-plane metadata.
 - When the package gains new public API subdomains, update the repository structure and placement rules so agents know where new files belong.
 - Keep [`AGENTS.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/AGENTS.md) aligned with repo-wide workflow, verification, and delivery rules when those rules change.
@@ -61,8 +62,9 @@ Before finalizing a spec update:
 2. Re-read the affected code so each factual statement is tied to the current implementation.
 3. Re-run or confirm the commands documented in the spec when command behavior changes.
 4. Check that compatibility-sensitive claims match the current tests or add tests if the change introduces new custom serialization behavior.
-5. Confirm that any behavior described in [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md) or a feature spec and touched by the implementation has unit-test coverage.
-6. Remove subjective language, roadmap language, and unimplemented design intent.
+5. When tool-contract behavior is touched, confirm the spec and tests still distinguish `allowed = nil`, `allowed = []`, and definitions-only payloads.
+6. Confirm that any behavior described in [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md) or a feature spec and touched by the implementation has unit-test coverage.
+7. Remove subjective language, roadmap language, and unimplemented design intent.
 
 ## Naming And Path Conventions
 

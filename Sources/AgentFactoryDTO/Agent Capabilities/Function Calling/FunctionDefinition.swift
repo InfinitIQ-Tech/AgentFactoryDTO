@@ -50,9 +50,18 @@ public struct AddToolToAgentVersionRequest: Content, Sendable, Equatable {
 public typealias FunctionDefinition = ToolDefinition
 
 public struct AgentToolsConfig: Content, Sendable, Equatable {
-    /// Tool IDs for text-pattern matching / allow-listing.
+    /// Optional exact allow-list of tool names.
+    ///
+    /// `nil` preserves the absence of an allow-list in the payload.
+    /// `[]` is an explicit allow-list that enables no tool names.
+    /// When `definitions` is present and `allowed` is `nil`, the payload remains
+    /// "definitions-only" so downstream runtimes or publishers can apply their
+    /// own normalization without this DTO implying hidden built-in tools.
     public let allowed: [String]?
-    /// LLM-native tool schemas (JSON Schema).
+    /// LLM-native tool schemas plus optional execution endpoints.
+    ///
+    /// A payload may provide `definitions` without `allowed`; this DTO preserves
+    /// that wire shape instead of synthesizing an allow-list.
     public let definitions: [ToolDefinition]?
     public let toolPolicy: AgentToolPolicy?
 
