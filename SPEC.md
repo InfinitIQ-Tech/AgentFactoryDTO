@@ -68,7 +68,7 @@ The source tree contains spaces in `Agent Capabilities/Function Calling`. Quote 
 | Type group | Public types | Notes |
 |---|---|---|
 | JSON helper | `JSONValue` | Custom recursive JSON enum; decodes `Int` as `.number(Double)` |
-| Shared enums | `EnvironmentName`, `AgentVersionStatus`, `ChatRole`, `ClientChatRole`, `FeedbackRating` | `ClientChatRole` is narrower than `ChatRole` |
+| Shared enums | `EnvironmentName`, `AgentVersionStatus`, `ChatRole`, `ClientChatRole`, `FeedbackRating` | `ClientChatRole` is the public inbound runtime role subset |
 | Agent config | `AgentRuntimeConfig`, `AgentModelCandidate`, `AgentModelConfig`, `AgentMemoryConfig`, `AgentRetrievalConfig`, `AgentGuardrailsConfig`, `AgentConfig` | Core published agent configuration contract, including the version-scoped `systemPrompt` runtime instruction |
 | Tool config | `ToolEndpoint`, `ToolDefinition`, `AddToolToAgentVersionRequest`, `AgentToolsConfig`, `AgentToolPolicy` | Defined in the function-calling folder because tool schema support is a distinct subdomain |
 
@@ -87,7 +87,7 @@ The source tree contains spaces in `Agent Capabilities/Function Calling`. Quote 
 | Type | Purpose |
 |---|---|
 | `ToolCall` | Tool invocation envelope with `toolId`, optional `callId`, and JSON arguments |
-| `ChatMessageIn` | Input chat message using `ClientChatRole` |
+| `ChatMessageIn` | Stateless runtime input message, including assistant tool-call replay and tool-result continuation fields |
 | `ChatRequest` | Runtime chat request, including routing by `environment` or direct `agentVersionId` |
 | `FeedbackRequest` | Feedback payload tied to agent, version, environment, and optional conversation or message |
 
@@ -147,7 +147,10 @@ The source tree contains spaces in `Agent Capabilities/Function Calling`. Quote 
 - `AgentToolsConfig.allowed == nil` preserves allow-list omission from the wire payload, while `AgentToolsConfig.allowed == []` is an explicit empty allow-list.
 - A definitions-only `AgentToolsConfig` payload (`definitions` present with omitted `allowed`) is valid; downstream runtimes may infer executable tool names from the definitions and publishers may normalize that payload before persistence.
 - `AgentToolsConfig` does not imply built-in tools are enabled unless the payload names them explicitly.
-- `ChatMessageIn` accepts only `user` or `assistant`.
+- `ChatMessageIn` accepts `user`, `assistant`, or `tool`.
+- `ChatMessageIn.toolCalls` carries assistant replay tool-call metadata when a caller resends a prior assistant tool-call turn.
+- `ChatMessageIn.toolCallId` carries the correlation id for a `tool` replay message.
+- `ChatRequest.messages` may end with either a `user` message or a `tool` message when continuing after client-side tool execution.
 - `ChatMessageDTO` can emit `system`, `user`, `assistant`, or `tool`.
 
 ## 7. Commands
@@ -241,7 +244,7 @@ Expectations for new or changed code:
 - There is no README or repo-local architecture note outside the source code.
 - There is no repo-local CI, lint, or formatter configuration file.
 - The current tests still do not cover every public DTO. `CreateAgentRequest`, `UpdateAgentRequest`, `DeploymentVersionWeight`, `UpsertDeploymentRequest`, and `FeedbackRequest` do not yet have dedicated wire-contract tests.
-- The documented `ChatRequest.messages` rule that the last message must be from the user is not enforced by package code.
+- The documented `ChatRequest.messages` rule now allows either a trailing user message or a trailing tool message, and that sequencing rule is not enforced by package code.
 
 ## 12. Conformance Criteria
 

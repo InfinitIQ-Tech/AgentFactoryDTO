@@ -98,6 +98,7 @@ public enum ChatRole: String, Content, Sendable {
 public enum ClientChatRole: String, Content, Sendable {
     case user
     case assistant
+    case tool
 }
 
 public enum FeedbackRating: String, Content, Sendable {
@@ -294,10 +295,14 @@ public struct ToolCall: Content, Sendable {
 public struct ChatMessageIn: Content, Sendable {
     public let role: ClientChatRole
     public let content: String
+    public let toolCalls: [ToolCall]?
+    public let toolCallId: String?
 
-    public init(role: ClientChatRole, content: String) {
+    public init(role: ClientChatRole, content: String, toolCalls: [ToolCall]? = nil, toolCallId: String? = nil) {
         self.role = role
         self.content = content
+        self.toolCalls = toolCalls
+        self.toolCallId = toolCallId
     }
 }
 
@@ -311,7 +316,7 @@ public struct ChatRequest: Content, Sendable {
     public let conversationId: UUID?
     /// Optional user identifier for consistent weighted routing
     public let userId: String?
-    /// Chat messages to send (last message must be from user)
+    /// Chat messages to send (last message must be from user or tool)
     public let messages: [ChatMessageIn]
     /// Optional metadata to pass through to the runtime
     public let metadata: [String: JSONValue]?
@@ -328,7 +333,7 @@ public struct ChatRequest: Content, Sendable {
     ///   - environment: Target environment (used for deployment routing when agentVersionId is nil)
     ///   - conversationId: Optional conversation ID for chat continuity
     ///   - userId: Optional user ID for consistent weighted version selection
-    ///   - messages: Array of chat messages (last must be user role)
+    ///   - messages: Array of chat messages (last must be user or tool role)
     ///   - metadata: Optional metadata dictionary
     ///   - providerKeys: Optional provider API keys (not persisted)
     ///   - agentVersionId: Optional version ID to bypass deployment routing. Defaults to nil.

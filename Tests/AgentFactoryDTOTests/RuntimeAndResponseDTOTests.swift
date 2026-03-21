@@ -189,6 +189,85 @@ final class RuntimeAndResponseDTOTests: XCTestCase {
         XCTAssertNil(json["agentVersionId"])
     }
 
+    func testChatRequestDecodesToolContinuationHistory() throws {
+        let json = #"""
+        {
+          "agent_ref": "support-agent",
+          "environment": "dev",
+          "messages": [
+            {
+              "role": "assistant",
+              "content": "",
+              "tool_calls": [
+                {
+                  "call_id": "call-weather",
+                  "tool_id": "weather",
+                  "args": {
+                    "zip_code": 94518
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "content": "{\"temp\":82}",
+              "tool_call_id": "call-weather"
+            }
+          ]
+        }
+        """#
+
+        let request = try decoder.decode(ChatRequest.self, from: Data(json.utf8))
+
+        XCTAssertEqual(request.messages.map(\.role), [.assistant, .tool])
+        XCTAssertEqual(request.messages[0].toolCalls?.first?.toolId, "weather")
+        XCTAssertEqual(request.messages[0].toolCalls?.first?.callId, "call-weather")
+        XCTAssertEqual(request.messages[1].toolCallId, "call-weather")
+        XCTAssertEqual(request.messages[1].content, #"{"temp":82}"#)
+    }
+
+    func testChatRequestEncodesToolContinuationFields() throws {
+        let request = ChatRequest(
+            agentRef: "support-agent",
+            environment: .dev,
+            conversationId: nil,
+            userId: nil,
+            messages: [
+                ChatMessageIn(
+                    role: .assistant,
+                    content: "",
+                    toolCalls: [
+                        ToolCall(
+                            callId: "call-weather",
+                            toolId: "weather",
+                            args: ["zip_code": .number(94518)]
+                        )
+                    ]
+                ),
+                ChatMessageIn(
+                    role: .tool,
+                    content: #"{"temp":82}"#,
+                    toolCallId: "call-weather"
+                )
+            ],
+            metadata: nil,
+            providerKeys: nil,
+            agentVersionId: nil
+        )
+
+        let data = try encoder.encode(request)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let messages = try XCTUnwrap(json["messages"] as? [[String: Any]])
+
+        XCTAssertEqual(messages[0]["role"] as? String, "assistant")
+        let toolCalls = try XCTUnwrap(messages[0]["tool_calls"] as? [[String: Any]])
+        XCTAssertEqual(toolCalls[0]["call_id"] as? String, "call-weather")
+        XCTAssertEqual(toolCalls[0]["tool_id"] as? String, "weather")
+        XCTAssertEqual(messages[1]["role"] as? String, "tool")
+        XCTAssertEqual(messages[1]["tool_call_id"] as? String, "call-weather")
+        XCTAssertEqual(messages[1]["content"] as? String, #"{"temp":82}"#)
+    }
+
     func testResponseDTOsDecode() throws {
         let json = #"""
         {

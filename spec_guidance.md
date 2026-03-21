@@ -13,7 +13,7 @@ This repository uses a root-level spec set to give coding agents one current sou
 | [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md) | Procedural instructions for reading, writing, and maintaining specs in this repository |
 | [`spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_log.md) | Dated log of repo-level spec changes |
 
-This repository currently has no `features/` subtree. Add feature-level specs only if the package grows into clearly bounded modules that need their own source-of-truth documents.
+This repository now uses `features/runtime-chat-input-history/` for the stateless chat-history replay contract. Add additional feature-level specs only when another bounded package subdomain needs its own source-of-truth document.
 
 ## How To Read Specs In This Repository
 

@@ -1,5 +1,12 @@
 # spec_log.md
 
+## 2026-03-18
+
+- Files changed: [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md), [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md), [`spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_log.md), [`features/runtime-chat-input-history/SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/features/runtime-chat-input-history/SPEC.md), [`features/runtime-chat-input-history/spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/features/runtime-chat-input-history/spec_log.md)
+- Summary: Added a feature-level source of truth for stateless runtime chat-history replay and updated the root DTO spec to document assistant tool-call replay, tool-result continuation, and the wider inbound client role set.
+- Trigger: Runtime tool continuation work in the consuming AgentFactory backend exposed that the public chat request contract could not represent replayed assistant `tool_calls` or trailing `tool` messages.
+- Operational impact: Future DTO work must preserve the fields and enum cases needed to resend assistant tool-call turns and tool-result continuation history across stateless `/v1/chat` requests.
+
 ## 2026-03-16
 
 - Files changed: [`Sources/AgentFactoryDTO/Agent Capabilities/Function Calling/FunctionDefinition.swift`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Sources/AgentFactoryDTO/Agent%20Capabilities/Function%20Calling/FunctionDefinition.swift), [`Tests/AgentFactoryDTOTests/AgentFactoryDTOTests.swift`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Tests/AgentFactoryDTOTests/AgentFactoryDTOTests.swift), [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md), [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md), [`spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_log.md)
