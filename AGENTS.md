@@ -4,14 +4,17 @@
 
 Use specs as the implementation contract for this repository. Do not go straight from prompt to code.
 
+Before planning or implementing any task in this repository, always retrieve the Confluence page [`InfinitIQ Tech - Company Philosophy & The Infinite Mindset`](https://infinitiqtech.atlassian.net/wiki/spaces/Core/pages/4292609/InfinitIQ+Tech+-+Company+Philosophy+The+Infinite+Mindset). Treat that page as required operating context for the work: it explains why changes are being made at all. Repository changes should support InfinitIQ Tech's ethical software development standards, long-term quality bar, open-source democratization goals, and infinite-mindset decision making rather than short-term convenience.
+
 ## Read Order
 
 1. `AGENTS.md`
-2. The relevant feature spec in `features/<feature-name>/SPEC.md`, if it exists
-3. `SPEC.md`
-4. `spec_guidance.md`
-5. The relevant spec log files
-6. The live code in `Package.swift`, `Sources/AgentFactoryDTO/AgentFactoryDTO.swift`, `Sources/AgentFactoryDTO/Agent Capabilities/Function Calling/`, and `Tests/AgentFactoryDTOTests/`
+2. Retrieve and read the Confluence page `InfinitIQ Tech - Company Philosophy & The Infinite Mindset`: `https://infinitiqtech.atlassian.net/wiki/spaces/Core/pages/4292609/InfinitIQ+Tech+-+Company+Philosophy+The+Infinite+Mindset`
+3. The relevant feature spec in `features/<feature-name>/SPEC.md`, if it exists
+4. `SPEC.md`
+5. `spec_guidance.md`
+6. The relevant spec log files
+7. The live code in `Package.swift`, `Sources/AgentFactoryDTO/AgentFactoryDTO.swift`, `Sources/AgentFactoryDTO/Agent Capabilities/Function Calling/`, and `Tests/AgentFactoryDTOTests/`
 
 Live code wins when documentation is stale, but any discovered mismatch must be corrected in the appropriate spec files before closing the task.
 
@@ -19,12 +22,13 @@ Live code wins when documentation is stale, but any discovered mismatch must be 
 
 For every implementation request, use this sequence:
 
-1. Read the user prompt and identify the smallest stable feature boundary affected by the request.
-2. Decide whether the request changes documented feature behavior or needs a new feature-level source of truth. If yes, write a new feature spec or update the existing one before changing code. If no, use the root specs as the active implementation contract.
-3. Implement the change against the relevant spec files.
-4. Update the feature spec after implementation so it matches shipped behavior when feature-scoped behavior changed.
-5. Update `SPEC.md`, `spec_guidance.md`, and `spec_log.md` when the change affects any existing repo-wide rule, workflow, command, boundary, architecture detail, shared behavior, or spec-maintenance process.
-6. Correct any code-versus-spec mismatch discovered during the work in the appropriate spec files before closing the task.
+1. Read the user prompt and retrieve the Confluence page `InfinitIQ Tech - Company Philosophy & The Infinite Mindset` so the task is framed by the company's purpose and infinite-mindset decision making.
+2. Identify the smallest stable feature boundary affected by the request.
+3. Decide whether the request changes documented feature behavior or needs a new feature-level source of truth. If yes, write a new feature spec or update the existing one before changing code. If no, use the root specs as the active implementation contract.
+4. Implement the change against the relevant spec files.
+5. Update the feature spec after implementation so it matches shipped behavior when feature-scoped behavior changed.
+6. Update `SPEC.md`, `spec_guidance.md`, and `spec_log.md` when the change affects any existing repo-wide rule, workflow, command, boundary, architecture detail, shared behavior, or spec-maintenance process.
+7. Correct any code-versus-spec mismatch discovered during the work in the appropriate spec files before closing the task.
 
 Do not skip spec updates when behavior in a current spec changes. Do not create a feature spec for every small implementation-only change that does not change documented behavior.
 

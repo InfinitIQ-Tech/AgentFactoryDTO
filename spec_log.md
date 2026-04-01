@@ -1,5 +1,12 @@
 # spec_log.md
 
+## 2026-04-01
+
+- Files changed: [`AGENTS.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/AGENTS.md), [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md), [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md), [`spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_log.md)
+- Summary: Added a repo-wide requirement for agents to retrieve the company philosophy Confluence page before work and to treat that philosophy as the rationale for repository changes.
+- Trigger: User request to make the company philosophy page mandatory agent context in `AGENTS.md`.
+- Operational impact: Future agent work in this repository should start by retrieving the Confluence philosophy page and should frame implementation tradeoffs around InfinitIQ Tech's ethical, long-term, infinite-mindset goals.
+
 ## 2026-03-18
 
 - Files changed: [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md), [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md), [`spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_log.md), [`features/runtime-chat-input-history/SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/features/runtime-chat-input-history/SPEC.md), [`features/runtime-chat-input-history/spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/features/runtime-chat-input-history/spec_log.md)

@@ -20,13 +20,16 @@ This repository now uses `features/runtime-chat-input-history/` for the stateles
 Read spec files in this order:
 
 1. [`AGENTS.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/AGENTS.md)
-2. The relevant feature spec in `features/<feature-name>/SPEC.md`, if it exists
-3. [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md)
-4. [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md)
-5. The relevant spec log files
-6. Live code in [`Package.swift`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Package.swift), [`Sources/AgentFactoryDTO`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Sources/AgentFactoryDTO), and [`Tests/AgentFactoryDTOTests`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Tests/AgentFactoryDTOTests)
+2. Retrieve and read the Confluence page `InfinitIQ Tech - Company Philosophy & The Infinite Mindset` at [https://infinitiqtech.atlassian.net/wiki/spaces/Core/pages/4292609/InfinitIQ+Tech+-+Company+Philosophy+The+Infinite+Mindset](https://infinitiqtech.atlassian.net/wiki/spaces/Core/pages/4292609/InfinitIQ+Tech+-+Company+Philosophy+The+Infinite+Mindset)
+3. The relevant feature spec in `features/<feature-name>/SPEC.md`, if it exists
+4. [`SPEC.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/SPEC.md)
+5. [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md)
+6. The relevant spec log files
+7. Live code in [`Package.swift`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Package.swift), [`Sources/AgentFactoryDTO`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Sources/AgentFactoryDTO), and [`Tests/AgentFactoryDTOTests`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Tests/AgentFactoryDTOTests)
 
 If the code and spec disagree, inspect the live code first and then update the stale document.
+
+The company-philosophy Confluence page is not optional context. Agents should use it to understand why work is being performed and should prefer decisions that align with ethical software development, long-term quality, sustainable growth, and InfinitIQ Tech's infinite mindset when they encounter tradeoffs.
 
 ## How To Update `SPEC.md`
 
