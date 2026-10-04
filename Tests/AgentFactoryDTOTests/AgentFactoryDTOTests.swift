@@ -223,6 +223,54 @@ final class AgentFactoryDTOTests: XCTestCase {
         XCTAssertNil(json["systemPrompt"])
     }
 
+    func testAgentConfigRoundTripsStructuredOutputConfig() throws {
+        let config = AgentConfig(
+            id: "support-agent",
+            name: "Support Agent",
+            version: "v1",
+            schemaVersion: "2",
+            systemPrompt: "Return JSON matching the requested schema.",
+            description: nil,
+            tags: nil,
+            runtime: AgentRuntimeConfig(streaming: true, maxTurns: nil, maxConcurrentTools: nil),
+            model: AgentModelConfig(
+                strategy: "single",
+                candidates: [AgentModelCandidate(name: "primary", model: "anthropic:claude-3-5-sonnet")],
+                routingPolicy: nil
+            ),
+            memory: nil,
+            retrieval: nil,
+            tools: nil,
+            guardrails: nil,
+            output: AgentOutputConfig(
+                format: AgentOutputFormat(
+                    type: "json_schema",
+                    schema: [
+                        "type": .string("object"),
+                        "properties": .object([
+                            "summary": .object(["type": .string("string")])
+                        ]),
+                        "required": .array([.string("summary")])
+                    ]
+                )
+            )
+        )
+
+        let data = try encoder.encode(config)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let output = try XCTUnwrap(json["output"] as? [String: Any])
+        let format = try XCTUnwrap(output["format"] as? [String: Any])
+        let schema = try XCTUnwrap(format["schema"] as? [String: Any])
+
+        XCTAssertEqual(format["type"] as? String, "json_schema")
+        XCTAssertEqual(schema["type"] as? String, "object")
+
+        let decoded = try decoder.decode(AgentConfig.self, from: data)
+
+        XCTAssertEqual(decoded.output?.format.type, "json_schema")
+        XCTAssertEqual(decoded.output?.format.schema["type"], .string("object"))
+    }
+
     func testPublishAgentVersionRequestEncodesNestedSystemPrompt() throws {
         let request = PublishAgentVersionRequest(
             config: AgentConfig(

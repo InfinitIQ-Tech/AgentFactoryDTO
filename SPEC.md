@@ -70,7 +70,7 @@ The source tree contains spaces in `Agent Capabilities/Function Calling`. Quote 
 |---|---|---|
 | JSON helper | `JSONValue` | Custom recursive JSON enum; decodes `Int` as `.number(Double)` |
 | Shared enums | `EnvironmentName`, `AgentVersionStatus`, `ChatRole`, `ClientChatRole`, `FeedbackRating` | `ClientChatRole` is the public inbound runtime role subset |
-| Agent config | `AgentRuntimeConfig`, `AgentModelCandidate`, `AgentModelConfig`, `AgentMemoryConfig`, `AgentRetrievalConfig`, `AgentGuardrailsConfig`, `AgentConfig` | Core published agent configuration contract, including the version-scoped `systemPrompt` runtime instruction |
+| Agent config | `AgentRuntimeConfig`, `AgentModelCandidate`, `AgentModelConfig`, `AgentMemoryConfig`, `AgentRetrievalConfig`, `AgentGuardrailsConfig`, `AgentOutputFormat`, `AgentOutputConfig`, `AgentConfig` | Core published agent configuration contract, including the version-scoped `systemPrompt` runtime instruction |
 | Tool config | `ToolEndpoint`, `ToolDefinition`, `AddToolToAgentVersionRequest`, `AgentToolsConfig`, `AgentToolPolicy` | Defined in the function-calling folder because tool schema support is a distinct subdomain |
 
 ### 5.2 Control-Plane Request Types
@@ -144,6 +144,10 @@ The source tree contains spaces in `Agent Capabilities/Function Calling`. Quote 
 - `ChatRequest.messages` are documented to end with a user message; the package currently documents this contract but does not enforce it locally.
 - `AgentConfig.systemPrompt` is a required field on the published version snapshot and encodes to `system_prompt` in JSON.
 - `AgentConfig.systemPrompt` is version-scoped runtime configuration; it is distinct from the mutable `AgentDTO.systemPrompt` control-plane field.
+- `AgentConfig.output` is an optional published version snapshot section for structured output configuration and is omitted when `nil`.
+- `AgentOutputConfig.format` wraps the required `AgentOutputFormat` payload.
+- `AgentOutputFormat.type` is a required string and `AgentOutputFormat.schema` is a required recursive JSON object stored as `[String: JSONValue]`.
+- [Structured output](features/structured-output/SPEC.md) defines the AF-83 envelope: required `format`, `type`, and object-valued `schema`; arbitrary recursive schema keys and values are preserved under the snake_case wire strategies. DTOs transport this schema; external runtimes own semantic validation and provider execution.
 - `AgentConfig.tools == nil` means the published version snapshot does not declare any tool configuration.
 - `AgentToolsConfig.allowed == nil` preserves allow-list omission from the wire payload, while `AgentToolsConfig.allowed == []` is an explicit empty allow-list.
 - A definitions-only `AgentToolsConfig` payload (`definitions` present with omitted `allowed`) is valid; downstream runtimes may infer executable tool names from the definitions and publishers may normalize that payload before persistence.
@@ -203,8 +207,8 @@ public struct ToolCall: Content, Sendable {
 |---|---|
 | Framework | XCTest |
 | Test target | `AgentFactoryDTOTests` |
-| Current file layout | [`Tests/AgentFactoryDTOTests/AgentFactoryDTOTests.swift`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Tests/AgentFactoryDTOTests/AgentFactoryDTOTests.swift) and [`Tests/AgentFactoryDTOTests/RuntimeAndResponseDTOTests.swift`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/Tests/AgentFactoryDTOTests/RuntimeAndResponseDTOTests.swift) |
-| Current coverage focus | `AgentConfig`, `PublishAgentVersionRequest`, `AgentToolsConfig` compatibility, `ToolCall`, SSE tool events, stream lifecycle events, `ChatRequest`, `AgentVersionDTO`, `AgentWithDeploymentsDTO`, `ChatResponseDTO`, and `AcceptedResponse` wire contracts |
+| Current file layout | `Tests/AgentFactoryDTOTests/AgentFactoryDTOTests.swift`, `Tests/AgentFactoryDTOTests/RuntimeAndResponseDTOTests.swift`, and `Tests/AgentFactoryDTOTests/StructuredOutputDTOTests.swift` |
+| Current coverage focus | `AgentConfig`, `AgentOutputConfig`, `PublishAgentVersionRequest`, `AgentToolsConfig` compatibility, `ToolCall`, SSE tool events, stream lifecycle events, `ChatRequest`, `AgentVersionDTO`, `AgentWithDeploymentsDTO`, `ChatResponseDTO`, and `AcceptedResponse` wire contracts |
 
 Expectations for new or changed code:
 

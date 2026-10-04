@@ -13,7 +13,7 @@ This repository uses a root-level spec set to give coding agents one current sou
 | [`spec_guidance.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_guidance.md) | Procedural instructions for reading, writing, and maintaining specs in this repository |
 | [`spec_log.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/spec_log.md) | Dated log of repo-level spec changes |
 
-This repository now uses `features/runtime-chat-input-history/` for the stateless chat-history replay contract. Add additional feature-level specs only when another bounded package subdomain needs its own source-of-truth document.
+This repository uses `features/runtime-chat-input-history/` for stateless chat-history replay and `features/structured-output/` for the optional output schema envelope. Add additional feature-level specs only when another bounded package subdomain needs its own source-of-truth document.
 
 ## How To Read Specs In This Repository
 
@@ -40,6 +40,7 @@ The company-philosophy Confluence page is not optional context. Agents should us
 - When a rule affects a compatibility-sensitive DTO such as `JSONValue` or `AgentToolsConfig`, verify the statement against the live implementation and tests before saving the spec.
 - When updating `AgentToolsConfig`, document whether `allowed` is omitted or explicitly empty, whether definitions-only payloads are preserved, and avoid language that implies hidden built-in tools are enabled by default.
 - When `AgentConfig` changes, state whether the field is required, how it serializes on the wire, and whether it represents published runtime snapshot data or separate control-plane metadata.
+- For structured-output changes, preserve arbitrary schema keys and recursive JSON values under the package's snake_case wire strategies; keep provider execution and semantic schema validation outside this DTO library.
 - When the package gains new public API subdomains, update the repository structure and placement rules so agents know where new files belong.
 - Keep [`AGENTS.md`](/Users/kennethdubroff/Development/InfinitIQTech/core/backend/AgentFactoryDTO/AGENTS.md) aligned with repo-wide workflow, verification, and delivery rules when those rules change.
 
