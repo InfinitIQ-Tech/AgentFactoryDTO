@@ -167,6 +167,29 @@ public struct AgentRetrievalConfig: Content, Sendable {
     }
 }
 
+/// Per-turn output format from the public AgentConfig contract. Runtimes
+/// validate the discriminator and execute the schema; this DTO transports it.
+public struct AgentOutputFormat: Content, Sendable {
+    public let type: String
+    /// An opaque JSON Schema object. Dictionary keys are data and must retain
+    /// their exact spelling under the surrounding DTO's key-conversion strategy.
+    public let schema: [String: JSONValue]
+
+    public init(type: String, schema: [String: JSONValue]) {
+        self.type = type
+        self.schema = schema
+    }
+}
+
+/// Optional structured-output declaration in a published manifest.
+public struct AgentOutputConfig: Content, Sendable {
+    public let format: AgentOutputFormat
+
+    public init(format: AgentOutputFormat) {
+        self.format = format
+    }
+}
+
 public struct AgentGuardrailsConfig: Content, Sendable {
     public let piiRedaction: Bool?
     public let jailbreakDetection: Bool?
@@ -194,8 +217,10 @@ public struct AgentConfig: Content, Sendable {
     public let retrieval: AgentRetrievalConfig?
     public let tools: AgentToolsConfig?
     public let guardrails: AgentGuardrailsConfig?
+    /// Omitted for the existing unstructured text behavior.
+    public let output: AgentOutputConfig?
 
-    public init(id: String, name: String, version: String, schemaVersion: String, systemPrompt: String, description: String?, tags: [String]?, runtime: AgentRuntimeConfig, model: AgentModelConfig, memory: AgentMemoryConfig?, retrieval: AgentRetrievalConfig?, tools: AgentToolsConfig?, guardrails: AgentGuardrailsConfig?) {
+    public init(id: String, name: String, version: String, schemaVersion: String, systemPrompt: String, description: String?, tags: [String]?, runtime: AgentRuntimeConfig, model: AgentModelConfig, memory: AgentMemoryConfig?, retrieval: AgentRetrievalConfig?, tools: AgentToolsConfig?, guardrails: AgentGuardrailsConfig?, output: AgentOutputConfig? = nil) {
         self.id = id
         self.name = name
         self.version = version
@@ -209,6 +234,7 @@ public struct AgentConfig: Content, Sendable {
         self.retrieval = retrieval
         self.tools = tools
         self.guardrails = guardrails
+        self.output = output
     }
 }
 
